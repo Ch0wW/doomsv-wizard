@@ -14,11 +14,11 @@ import doomsv.chocodoom as ChocoServer
 
 def main (args):
 	
-	# Common Elements
+    # Common Elements
     doom = common.DoomCommon("doomconfig.ini");
 
-	#Check Arguments
-	#-- Destination System
+    #Check Arguments
+    #-- Destination System
     #if (False):
     #    print ("Unsupported Argv yet");
     #else:
@@ -30,11 +30,11 @@ def main (args):
 [2] PrBoom+\n\
 [3] Zdaemon (Unsupported yet)"; 
 
-"""
-\n\
-[4] Zandronum\n\
-[5] Odamex
-"""
+    """
+    \n\
+    [4] Zandronum\n\
+    [5] Odamex
+    """
 
     iSelectedPort = doom.ClampQuestion(1,3, msg_choice, "Your choice");
 

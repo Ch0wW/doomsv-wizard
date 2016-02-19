@@ -1,0 +1,103 @@
+[
+	{
+		"gamemode": 0,
+		"duel": 1,
+		"cooperative": 0,
+		"name": "Oldschool Duel (DOOM DOS settings)",
+		"defname": "classicduel",
+
+		"dmflags": 0,
+		"dmflags2": 0,
+		"dmflags3": 0
+	}, 
+	{
+		"gamemode": 0,
+		"duel": 1,
+		"cooperative": 0,
+		"name": "Oldschool Duel (Competitive settings)",
+		"defname": "competduel",
+
+		"dmflags": 0,
+		"dmflags2": 0,
+		"dmflags3": 0
+	}, 
+	{
+		"gamemode": 0,
+		"duel": 1,
+		"cooperative": 0,
+		"name": "Newschool Duel",
+		"defname": "newschoolduel",
+
+		"dmflags": 0,
+		"dmflags2": 0,
+		"dmflags": 0
+	},
+	
+	
+	{
+		"gamemode": 0,
+		"duel": 0,
+		"cooperative": 0,
+		"name": "Oldschool DM (DOOM DOS settings)",
+		"defname": "dosffa",
+
+		"dmflags": 0,
+		"dmflags2": 0,
+		"dmflags3": 0
+	}, 
+	{
+		"gamemode": 0,
+		"duel": 0,
+		"cooperative": 0,
+		"name": "Classic DM (Used in most of the Zdaemon servers)",
+		"defname": "zdffa",
+
+		"dmflags": 0,
+		"dmflags2": 0,
+		"dmflags3": 0
+	}, {
+		"gamemode": 0,
+		"duel": 0,
+		"name": "Newschool FFA",
+		"defname": "nsffa",
+
+		"dmflags": 0,
+		"dmflags2": 0,
+		"dmflags3": 0
+	},
+
+	
+	{
+		"gamemode": 2,
+		"duel": 0,
+		"cooperative": 1,
+		"name": "Oldschool Cooperative - DOOM DOS Settings",
+		"defname": "doscoop",
+
+		"dmflags": 0,
+		"dmflags2": 0,
+		"dmflags3": 0
+	}, 
+	{
+		"gamemode": 2,
+		"duel": 0,
+		"cooperative": 1,
+		"name": "Semi-Oldschool Cooperative (no jump, no freelook, crosshair enabled)",
+		"defname": "semioscoop",
+
+		"dmflags": 0,
+		"dmflags2": 0,
+		"dmflags3": 0
+	}, 
+	{
+		"gamemode": 2,
+		"duel": 0,
+		"cooperative": 1,
+		"name": "Newschool Cooperative",
+		"defname": "nscoop",
+
+		"dmflags": 0,
+		"dmflags2": 0,
+		"dmflags3": 0
+	}
+]

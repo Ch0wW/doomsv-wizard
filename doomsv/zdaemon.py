@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 from datetime import date;
+import json;    
 
 GAMEMODE_DM = 1;
 GAMEMODE_TDM = 2;
@@ -8,6 +9,15 @@ GAMEMODE_COOP = 3;
 GAMEMODE_CTF = 4;
 GAMEMODE_SURV = 5;
 GAMEMODE_DDOM = 6;
+GAMEMODE_KOTH = 7;
+
+SORT_DUEL = 0
+SORT_FFA = 1
+SORT_COOP = 2
+SORT_TDM = 3
+SORT_CTF = 4
+SORT_DDOM = 5
+SORT_KOTH = 6
 
 #=============================
 # Zdaemon Class for generating a server.
@@ -18,11 +28,39 @@ class ZDaemonServer():
     dmflags = 0;
     dmflags2 = 0;
     maxlives = 1;
-    bDuelEnabled = false;
+    bDuelEnabled = False;
+    tDmflags = "";
+    tDmFlagsGamemode = [[] for _ in range (0,7)];
+    
     
     def __init__(self, commonclass):
         self.common = commonclass;
-
+        
+        # Sort the Zdaemon json file through a local array.
+        with open ("dmflags/zdaemon.json") as filename:
+            tDmflags = json.load(filename);
+            
+        for element in tDmflags:            
+            # Register allowed values.
+            if (element['gamemode'] == 0 and element['duel'] == 1):
+                self.tDmFlagsGamemode[SORT_DUEL].append(element);
+            elif (element['gamemode'] == 0 and element['duel'] == 0):
+                self.tDmFlagsGamemode[SORT_FFA].append(element);
+            elif (element['gamemode'] == 1):
+                self.tDmFlagsGamemode[SORT_TDM].append(element);
+            elif ( (element['gamemode'] == 2 or element['gamemode'] == 4) and element['cooperative'] == 1):
+                self.tDmFlagsGamemode[SORT_COOP].append(element);
+            elif (element['gamemode'] == 3):
+                self.tDmFlagsGamemode[SORT_CTF].append(element);
+            elif (element['gamemode'] == 5):
+                self.tDmFlagsGamemode[SORT_DDOM].append(element);
+            elif (element['gamemode'] == 6):
+                self.tDmFlagsGamemode[SORT_KOTH].append(element);
+                
+        # ToDo: Count total configurations
+        print ("Total of templates: "+str(len(self.tDmFlagsGamemode[0])+len(self.tDmFlagsGamemode[1])+len(self.tDmFlagsGamemode[2])+len(self.tDmFlagsGamemode[3])+len(self.tDmFlagsGamemode[4])+len(self.tDmFlagsGamemode[5])+len(self.tDmFlagsGamemode[6])))
+#        print (self.tDmFlagsGamemode[0])
+        
     ###
     # ASK_Gamemode 
     # Asks to input the gamemode chosen.
@@ -78,38 +116,19 @@ class ZDaemonServer():
     # Asks to input the gamemode chosen.
     ###   
     def ASK_DMFlags(self):
-    
-    # Coop/Survival : You get the monsters!
-    if (self.gamemode == GAMEMODE_COOP or self.gamemode == GAMEMODE_SURV)
-        iMonstersDMFLAGS = 1;
-    
-    if (self.gamemode == GAMEMODE_CTF):
-        print ("[INFO] Auto-Applying correct CTF DMFlags.")
-        self.dmflags = 17060932;
-        self.dmflags2 = 131080;
-        return;
-    
-    
-        msg = "What DMFlags are you going to use?\n\
-[1] Oldschool settings (No jump, no freelook, no crosshair, no Zdoom fixes)\n\
-[2] Semi-Oldschool settings (No jump, no Zdoom fixes)\n\
-[3] Newschool (Jump, freelook, crosshair, zdoom fixes)\n\
-[4] Custom settings";
-        iChoice = self.common.ClampQuestion(1, 4, msg, "Please input your choice");
-        
-        if (iChoice == 1):
-            self.dmflags = 0;
-            self.dmflags2 = 0;
-        elif (iChoice == 2): 
-            self.dmflags = 0;
-            self.dmflags2 = 0;
-        elif (iChoice == 3):
-            self.dmflags = 0;
-            self.dmflags2 = 0;
-        elif (iChoice == 4):
-            #ToDo: Make a choice!
-            #The check must see if it is a 2^ value, or if its max value doesn't surpass Zdaemon's.
+      
+        if (self.gamemode == GAMEMODE_CTF):
+            print ("[INFO] Auto-Applying correct CTF DMFlags.")
+            self.dmflags = 17060932;
+            self.dmflags2 = 131080;
             return;
+    
+    
+        msg = "What DMFlags are you going to use?\n";
+        for i in range (1, len(self.tDmFlagsGamemode[0])+1):
+            msg = msg + self.tDmFlagsGamemode[0][i-1]['name']+"\n";
+        
+        iChoice = self.common.ClampQuestion(1, len(self.tDmFlagsGamemode[iMode])+1, msg, "Please input your choice");
         
         self.iPlayers = self.common.ClampQuestion(2, self.iClients, "", "How many players?");
     
@@ -158,11 +177,11 @@ class ZDaemonServer():
         f.write ("//------------\n");       
         
     def Run(self):
-        self.common.ASK_IWAD();
-        self.common.ASK_Hostname();
-        self.common.ASK_MailAddress();
-        self.common.ASK_WebAddress();
-        self.common.ASK_Password();
+#        self.common.ASK_IWAD();
+#        self.common.ASK_Hostname();
+#        self.common.ASK_MailAddress();
+#        self.common.ASK_WebAddress();
+#        self.common.ASK_Password();
         
         self.ASK_ClientInfo();
         
@@ -170,7 +189,7 @@ class ZDaemonServer():
         self.ASK_Gamemode();
         self.ASK_Difficulty();
         
-        #self.ASK_DMFlags()
+        self.ASK_DMFlags()
         
         # Printing our server.
         print ("=========================================");
