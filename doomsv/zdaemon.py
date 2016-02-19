@@ -1,5 +1,13 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+from datetime import date;
+
+GAMEMODE_DM = 1;
+GAMEMODE_TDM = 2;
+GAMEMODE_COOP = 3;
+GAMEMODE_CTF = 4;
+GAMEMODE_SURV = 5;
+GAMEMODE_DDOM = 6;
 
 #=============================
 # Zdaemon Class for generating a server.
@@ -7,7 +15,11 @@
 class ZDaemonServer():
 
     common = "";
-
+    dmflags = 0;
+    dmflags2 = 0;
+    maxlives = 1;
+    bDuelEnabled = false;
+    
     def __init__(self, commonclass):
         self.common = commonclass;
 
@@ -16,39 +28,49 @@ class ZDaemonServer():
     # Asks to input the gamemode chosen.
     ###   
     def Gamemode_Name(self, mode):
-        if (not mode): return "Deathmatch"; 
-        elif (mode == 1): return "Team Deathmatch";
-        elif (mode == 2): return "Cooperation";
-        elif (mode == 3): return "Capture the Flag";
-        elif (mode == 4): return "Survival";
-        elif (mode == 5): return "Double Domination";
+        if   (mode == GAMEMODE_DM):   return "Deathmatch"; 
+        elif (mode == GAMEMODE_TDM):  return "Team Deathmatch";
+        elif (mode == GAMEMODE_COOP): return "Cooperation";
+        elif (mode == GAMEMODE_CTF):  return "Capture the Flag";
+        elif (mode == GAMEMODE_SURV): return "Survival";
+        elif (mode == GAMEMODE_DDOM): return "Double Domination";
         return "Deathmatch"; #Default Mode
         
     def ASK_Gamemode(self):
-        msg = "What Gamemode would you like to play?\n\
-[0] Deathmatch\n\
-[1] Team Deathmatch\n\
-[2] Cooperation\n\
-[3] Capture the Flag\n\
-[4] Survival\n\
-[5] Double Domination";
+    
+        # Set the special case for Duels.
+        if (self.iPlayers == 2):
+            submsg = "[1] Duel\n";
+            self.bDuelEnabled = True;
+        else:
+            submsg = "[1] Deathmatch\n";
+    
+        msg = "What Gamemode would you like to play?\n"+submsg+"[2] Team Deathmatch\n\
+[3] Cooperation\n\
+[4] Capture the Flag\n\
+[5] Survival\n\
+[6] Double Domination\n\
+[7] King of the Hill";
         
-        iChoice = self.common.ClampQuestion(0, 5, msg, "What gamemode will the server use?");
-        self.gamemode = iChoice;
+        self.gamemode = self.common.ClampQuestion(1, 7, msg, "Please input your choice");
+        
+        # Special case for lives.
+        if (self.gamemode == GAMEMODE_SURV):
+            self.maxlives = self.common.ClampQuestion(1, 25, msg, "How many lives would you like to have per player?");
  
     def ASK_Difficulty(self):
         
-        if (self.gamemode == 2 or self.gamemode == 4):
+        if (self.gamemode == GAMEMODE_COOP or self.gamemode == GAMEMODE_SURV):
         
             msg = "What Difficulty do you want to have?\n\
-[0] I'm too young to die. (Easy+2x ammo)\n\
-[1] Hey, not too rough. (Easy)\n\
-[2] Hurt me plenty (Normal)\n\
-[3] Ultra-Violence (Hard)\n\
-[4] NIGHTMARE! (Hard+Fast monsters+ monsters respawn+2x ammo)";
+[1] I'm too young to die. (Easy+2x ammo)\n\
+[2] Hey, not too rough. (Easy)\n\
+[3] Hurt me plenty (Normal)\n\
+[4] Ultra-Violence (Hard)\n\
+[5] NIGHTMARE! (Hard+Fast monsters+ monsters respawn+2x ammo)";
         
-            iChoice = self.common.ClampQuestion(0, 4, msg, "What difficulty will the server have?");
-            self.skill = iChoice+1; 
+            iChoice = self.common.ClampQuestion(1, 5, msg, "What difficulty will the server have?");
+            self.skill = iChoice; 
         else:
             self.skill = 5; #Automatically Nightmare for PvP servers.
     ###
@@ -56,43 +78,84 @@ class ZDaemonServer():
     # Asks to input the gamemode chosen.
     ###   
     def ASK_DMFlags(self):
-        self.iClients = self.common.ClampQuestion(2, 100, "", "How many clients would join the server?");
+    
+    # Coop/Survival : You get the monsters!
+    if (self.gamemode == GAMEMODE_COOP or self.gamemode == GAMEMODE_SURV)
+        iMonstersDMFLAGS = 1;
+    
+    if (self.gamemode == GAMEMODE_CTF):
+        print ("[INFO] Auto-Applying correct CTF DMFlags.")
+        self.dmflags = 17060932;
+        self.dmflags2 = 131080;
+        return;
+    
+    
+        msg = "What DMFlags are you going to use?\n\
+[1] Oldschool settings (No jump, no freelook, no crosshair, no Zdoom fixes)\n\
+[2] Semi-Oldschool settings (No jump, no Zdoom fixes)\n\
+[3] Newschool (Jump, freelook, crosshair, zdoom fixes)\n\
+[4] Custom settings";
+        iChoice = self.common.ClampQuestion(1, 4, msg, "Please input your choice");
+        
+        if (iChoice == 1):
+            self.dmflags = 0;
+            self.dmflags2 = 0;
+        elif (iChoice == 2): 
+            self.dmflags = 0;
+            self.dmflags2 = 0;
+        elif (iChoice == 3):
+            self.dmflags = 0;
+            self.dmflags2 = 0;
+        elif (iChoice == 4):
+            #ToDo: Make a choice!
+            #The check must see if it is a 2^ value, or if its max value doesn't surpass Zdaemon's.
+            return;
+        
         self.iPlayers = self.common.ClampQuestion(2, self.iClients, "", "How many players?");
     
     def ASK_ClientInfo(self):
         self.iClients = self.common.ClampQuestion(2, 100, "", "How many clients would join the server?");
         self.iPlayers = self.common.ClampQuestion(2, self.iClients, "", "How many players?");
     
-    
     def WriteCFG(self):
         
-        fputs ("// Zdaemon Configuration file for " + self.common.Hostname);
-        fputs ("// Creation date: "+date()); #ToDo
-        fputs ("// IWAD: " + self.common.IWAD);
+        f = open(filename+ext, 'w')
+        f.write ("// Zdaemon Configuration file for " + self.common.Hostname+"\n");
+        f.write ("// Creation date: "+now.strftime("%d/%m/%y")+"\n"); #ToDo
+        f.write ("// IWAD: " + self.common.IWAD+"\n");
         if (self.common.PWAD):
-            fputs ("// PWAD(s): "+ self.common.PWAD) #Case if we host PWADs
-        fputs ("// Generated by Ch0wW's Doom Server Generator - https://github.com/Ch0wW");
+            f.write ("// PWAD(s): "+ self.common.PWAD+"\n") #Case if we host PWADs
+        f.write ("// Generated by Ch0wW's Doom Server Generator - https://github.com/Ch0wW\n");
         
-        fputs ("");
-        fputs ("//------------");
-        fputs ("// General Server Informations");
-        fputs ("//------------");
-        fputs ('set hostname "'+self.common.Hostname+'"')
-        fputs ('set website "'+self.common.WWWURL+'"')
-        fputs ('set email "'+self.common.Mail+'"')
-        fputs ('set motd "" // Please set your MOTD (reminder: <br> goes to a new line');
-        fputs ("");
-        fputs ('set password "'+self.common.Password+'"')
-        fputs ('set join_password "'+self.common.JoinPassword+'"')
-        fputs ("");
-        fputs ("//------------");
-        fputs ("// General Server Settings");
-        fputs ("//------------");
-        fputs ('set maxclients "'+str(self.iClients)+'"')
-        fputs ('set maxplayers "'+str(self.iPlayers)+'"')
-        fputs ('set gametype "'+str(self.gamemode)+'" // '+self.Gamemode_Name(self.gamemode));
-        fputs ('set skill "'+str(self.skill)+'"');
-        fputs ("");       
+        f.write ("\n");
+        f.write ("//------------\n");
+        f.write ("// General Server Informations\n");
+        f.write ("//------------\n");
+        f.write ('set hostname "'+self.common.Hostname+'"\n')
+        f.write ('set website "'+self.common.WWWURL+'"\n')
+        f.write ('set email "'+self.common.Mail+'"\n')
+        f.write ('set motd "" // Please set your MOTD (reminder: <br> goes to a new line\n');
+        f.write ("\n");
+        f.write ('set password "'+self.common.Password+'"\n')
+        f.write ('set join_password "'+self.common.JoinPassword+'"\n')
+        f.write ("\n");
+        f.write ("//------------\n");
+        f.write ("// General Server Settings\n");
+        f.write ("//------------\n");
+        f.write ('set maxclients "'+str(self.iClients)+'"\n')
+        f.write ('set maxplayers "'+str(self.iPlayers)+'"\n')
+        f.write ('set gametype "'+str(self.gamemode-1)+'" // '+self.Gamemode_Name(self.gamemode)+"\n");
+        f.write ('set skill "'+str(self.skill)+'"\n');
+        f.write ("\n");       
+        f.write ("//------------\n");
+        f.write ("// DMFLAGS\n");
+        f.write ("//------------\n");
+        f.write ('set dmflags "'+str(self.dmflags)+'"\n')
+        f.write ('set dmflags2 "'+str(self.dmflags2)+'"\n')
+        f.write ("\n");       
+        f.write ("//------------\n");
+        f.write ("// Maplist\n");
+        f.write ("//------------\n");       
         
     def Run(self):
         self.common.ASK_IWAD();
