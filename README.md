@@ -13,6 +13,7 @@ Zandronum, and Odamex are planned in a near future.<br />
 
 # Usage:
 > python3 doomsv-wizard.py
+
 After that, it'll ask you the Doom gameport you'd wish to make a server, with its settings.
 
 Once it is done, you'll get a file with the settings you asked. Start it, let your friends connect and have fun!
