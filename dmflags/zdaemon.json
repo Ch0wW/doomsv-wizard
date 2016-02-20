@@ -30,7 +30,7 @@
 
 		"dmflags": 0,
 		"dmflags2": 0,
-		"dmflags": 0
+		"dmflags3": 0
 	},
 	
 	
@@ -66,6 +66,17 @@
 		"dmflags3": 0
 	},
 
+	{
+		"gamemode": 1,
+		"duel": 0,
+		"cooperative": 0,
+		"name": "Competitive Settings",
+		"defname": "nscoop",
+
+		"dmflags": 0,
+		"dmflags2": 0,
+		"dmflags3": 0
+	},
 	
 	{
 		"gamemode": 2,
@@ -100,4 +111,5 @@
 		"dmflags2": 0,
 		"dmflags3": 0
 	}
+	
 ]

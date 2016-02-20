@@ -107,30 +107,51 @@ class ZDaemonServer():
 [4] Ultra-Violence (Hard)\n\
 [5] NIGHTMARE! (Hard+Fast monsters+ monsters respawn+2x ammo)";
         
-            iChoice = self.common.ClampQuestion(1, 5, msg, "What difficulty will the server have?");
-            self.skill = iChoice; 
+            self.skill = self.common.ClampQuestion(1, 5, msg, "What difficulty will the server have?");
         else:
-            self.skill = 5; #Automatically Nightmare for PvP servers.
+            self.skill = 5;
     ###
     # ASK_BasicInfo 
     # Asks to input the gamemode chosen.
     ###   
     def ASK_DMFlags(self):
       
-        if (self.gamemode == GAMEMODE_CTF):
-            print ("[INFO] Auto-Applying correct CTF DMFlags.")
-            self.dmflags = 17060932;
-            self.dmflags2 = 131080;
-            return;
-    
-    
+        # Have to sort them out. Sucks.
+        if (self.bDuelEnabled):
+            iMode = SORT_DUEL;
+        elif (self.gamemode == GAMEMODE_DM and not self.bDuelEnabled):
+            iMode = SORT_FFA;
+        elif (self.gamemode == GAMEMODE_TDM):
+            iMode = SORT_TDM;
+        elif (self.gamemode == GAMEMODE_COOP or self.gamemode == GAMEMODE_SURV):
+            iMode = SORT_COOP;
+        elif (self.gamemode == GAMEMODE_CTF):
+            iMode = SORT_CTF;
+        elif (self.gamemode == GAMEMODE_DDOM):
+            iMode = SORT_DDOM;
+        elif (self.gamemode == GAMEMODE_KOTH):
+            iMode = SORT_KOTH;
+        
+        #Have to sort them from [1]. I know, that sucks even more.
         msg = "What DMFlags are you going to use?\n";
-        for i in range (1, len(self.tDmFlagsGamemode[0])+1):
-            msg = msg + self.tDmFlagsGamemode[0][i-1]['name']+"\n";
+        for i in range (1, len(self.tDmFlagsGamemode[iMode])+1):
+            msg = msg + '['+str(i)+']'+self.tDmFlagsGamemode[iMode][i-1]['name']+"\n";
+        msg = msg + '['+str(len(self.tDmFlagsGamemode[iMode])+1)+'] Custom DMFlags (Unsupported)';
         
-        iChoice = self.common.ClampQuestion(1, len(self.tDmFlagsGamemode[iMode])+1, msg, "Please input your choice");
+        iChoice = self.common.ClampQuestion(1, len(self.tDmFlagsGamemode[iMode]), msg, "Please input your choice"); #MUST BE len(self.tDmFlagsGamemode[iMode]+1
         
-        self.iPlayers = self.common.ClampQuestion(2, self.iClients, "", "How many players?");
+        if (iChoice == len(self.tDmFlagsGamemode[iMode])+1):
+            print ("We told you it's currently unsupported... Setting DMFlags to 0.");
+            self.dmflags  = 0;
+            self.dmflags2 = 0;
+            self.dmflags3 = 0;
+        
+        self.dmflags  = self.tDmFlagsGamemode[iMode][iChoice-1]['dmflags'];
+        self.dmflags2 = self.tDmFlagsGamemode[iMode][iChoice-1]['dmflags2'];
+        self.dmflags3 = self.tDmFlagsGamemode[iMode][iChoice-1]['dmflags3'];
+        
+        #debug
+        print (str(self.dmflags) + " / " + str(self.dmflags2) + " / " + str(self.dmflags3) )
     
     def ASK_ClientInfo(self):
         self.iClients = self.common.ClampQuestion(2, 100, "", "How many clients would join the server?");
@@ -171,6 +192,7 @@ class ZDaemonServer():
         f.write ("//------------\n");
         f.write ('set dmflags "'+str(self.dmflags)+'"\n')
         f.write ('set dmflags2 "'+str(self.dmflags2)+'"\n')
+        f.write ('set dmflags3 "'+str(self.dmflags3)+'"\n')
         f.write ("\n");       
         f.write ("//------------\n");
         f.write ("// Maplist\n");
