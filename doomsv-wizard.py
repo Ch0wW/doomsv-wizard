@@ -28,7 +28,7 @@ def main (args):
     msg_choice = "What port of Doom would you like to make a server?\n\
 [1] Chocolate Doom / Dos Doom\n\
 [2] PrBoom+\n\
-[3] Zdaemon (Unsupported yet)"; 
+[3] Zdaemon (Missing .sh creation)"; 
 
     """
     \n\

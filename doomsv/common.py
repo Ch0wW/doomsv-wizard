@@ -14,6 +14,7 @@ class DoomCommon():
     WWWURL = "";
     Mail = "";
     IWAD = "";
+    IWADNb = 0;
     PWAD = "";   
     Host_Prefix = "";
     Hostname = "";
@@ -90,6 +91,13 @@ class DoomCommon():
         elif (IWAD == 4): return "PLUTONIA.WAD"; # The Plutonia Experiment
         return "DOOM2.WAD"; #Default IWAD
     
+    def IWAD_Short(self, IWAD):
+        if (IWAD == 1): return "doom"; # The Ultimate DOOM
+        elif (IWAD == 2): return "doom2"; # DOOM 2
+        elif (IWAD == 3): return "tnt"; # TNT
+        elif (IWAD == 4): return "heretic"; # The Plutonia Experiment
+        return "doom2"; #Default IWAD
+    
     ###
     # ASK_IWAD 
     # Asks for the IWAD through the name
@@ -100,8 +108,8 @@ class DoomCommon():
 [2] Doom 2\n\
 [3] TNT\n\
 [4] The Plutonia Experiment";  
-        iChoice = self.ClampQuestion(1, 4, msg, "> Select");
-        self.IWAD = (self.IWAD_Name(iChoice))
+        self.IWADNb = self.ClampQuestion(1, 4, msg, "> Select");
+        self.IWAD = (self.IWAD_Name(self.IWADNb));
         
     ###
     # ASK_PWAD 
