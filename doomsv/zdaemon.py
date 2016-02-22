@@ -31,7 +31,7 @@ class ZDaemonServer():
     bDuelEnabled = False;
     tDmflags = "";
     tDmFlagsGamemode = [[] for _ in range (0,7)];
-    
+    bEnableVoice = False;
     
     def __init__(self, commonclass):
         self.common = commonclass;
@@ -57,9 +57,12 @@ class ZDaemonServer():
             elif (element['gamemode'] == 6):
                 self.tDmFlagsGamemode[SORT_KOTH].append(element);
                 
-        # ToDo: Count total configurations
+        # ToDo: Is there something cleaner?
         print ("Total of templates: "+str(len(self.tDmFlagsGamemode[0])+len(self.tDmFlagsGamemode[1])+len(self.tDmFlagsGamemode[2])+len(self.tDmFlagsGamemode[3])+len(self.tDmFlagsGamemode[4])+len(self.tDmFlagsGamemode[5])+len(self.tDmFlagsGamemode[6])))
-#        print (self.tDmFlagsGamemode[0])
+     
+    def ASK_ClientInfo(self):
+        self.iClients = self.common.ClampQuestion(2, 100, "", "How many clients would join the server?");
+        self.iPlayers = self.common.ClampQuestion(2, self.iClients, "", "How many players?");
         
     ###
     # ASK_Gamemode 
@@ -99,7 +102,6 @@ class ZDaemonServer():
     def ASK_Difficulty(self):
         
         if (self.gamemode == GAMEMODE_COOP or self.gamemode == GAMEMODE_SURV):
-        
             msg = "What Difficulty do you want to have?\n\
 [1] I'm too young to die. (Easy+2x ammo)\n\
 [2] Hey, not too rough. (Easy)\n\
@@ -151,15 +153,13 @@ class ZDaemonServer():
         self.dmflags3 = self.tDmFlagsGamemode[iMode][iChoice-1]['dmflags3'];
         
         #debug
-        print (str(self.dmflags) + " / " + str(self.dmflags2) + " / " + str(self.dmflags3) )
-    
-    def ASK_ClientInfo(self):
-        self.iClients = self.common.ClampQuestion(2, 100, "", "How many clients would join the server?");
-        self.iPlayers = self.common.ClampQuestion(2, self.iClients, "", "How many players?");
+        print ("Setting DMFLAGS to: "+str(self.dmflags) + " / " + str(self.dmflags2) + " / " + str(self.dmflags3) )
     
     def WriteCFG(self):
         
         f = open(filename+ext, 'w')
+        
+        #Swiggity Swaggity, Show me the config
         f.write ("// Zdaemon Configuration file for " + self.common.Hostname+"\n");
         f.write ("// Creation date: "+now.strftime("%d/%m/%y")+"\n"); #ToDo
         f.write ("// IWAD: " + self.common.IWAD+"\n");
@@ -187,6 +187,8 @@ class ZDaemonServer():
         f.write ('set gametype "'+str(self.gamemode-1)+'" // '+self.Gamemode_Name(self.gamemode)+"\n");
         f.write ('set skill "'+str(self.skill)+'"\n');
         f.write ("\n");       
+        
+        #DMFLAGS SETTINGS
         f.write ("//------------\n");
         f.write ("// DMFLAGS\n");
         f.write ("//------------\n");
@@ -194,9 +196,52 @@ class ZDaemonServer():
         f.write ('set dmflags2 "'+str(self.dmflags2)+'"\n')
         f.write ('set dmflags3 "'+str(self.dmflags3)+'"\n')
         f.write ("\n");       
+        
+        #MAPLIST SETTINGS
         f.write ("//------------\n");
         f.write ("// Maplist\n");
-        f.write ("//------------\n");       
+        f.write ("//------------\n");
+        if (self.common.IWAD == "DOOM.WAD"):
+            for i in range (1, 4):
+                for y in range (1, 9):
+                    f.write('addmap "e'+str(i)+'m'+str(y)+'"\n');
+        else:
+            for i in range (1, 15):
+                if (i < 10):
+                    f.write('addmap "map0'+str(i)+'"\n');
+                else:
+                    f.write('addmap "map'+str(i)+'"\n');
+            f.write('addmap "map31"\n');
+            f.write('addmap "map32"\n');
+            
+            for i in range (16, 30):
+                f.write('addmap "map'+str(i)+'"\n');
+                     
+        f.write ("\n");       
+        f.write ("//------------\n");
+        f.write ("// Voice Settings\n");
+        f.write ("//------------\n\n");
+        f.write ('set sv_voice_chat            "'+str(self.iEnableVoice)+'"\n');
+        f.write ('set sv_voice_max_quality     "3"\n')
+        f.write ("\n");     
+        f.write ("//------------\n");
+        f.write ("// Vote Settings\n"); 
+        f.write ("//------------\n");
+        f.write ('set sv_vote_limit        "3"\n');
+        f.write ('set sv_vote_timeout    "120"\n');
+        f.write ("\n");    
+        f.write ('set sv_vote_reset         "1"\n');  
+        f.write ('set sv_vote_randmap       "0"\n');
+        f.write ('set sv_vote_map           "0"\n');
+        f.write ('set sv_vote_map_percent "100"\n');
+        f.write ('set sv_vote_map_skip      "0"\n');
+		f.write ("\n"); 		 
+        f.write ('set sv_vote_kick          "1"\n'); 
+        f.write ('set sv_vote_kick_percent "60"\n');
+#set sv_vote_min          "51" 
+
+#set sv_vote_randcaps      "0" 
+       
         
     def Run(self):
 #        self.common.ASK_IWAD();
