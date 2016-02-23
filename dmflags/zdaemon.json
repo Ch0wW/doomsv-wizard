@@ -4,10 +4,9 @@
 		"duel": 1,
 		"cooperative": 0,
 		"name": "Oldschool Duel (DOOM DOS settings)",
-		"defname": "classicduel",
 
-		"dmflags": 0,
-		"dmflags2": 0,
+		"dmflags": 72029252,
+		"dmflags2": 823508480,
 		"dmflags3": 0
 	}, 
 	{
@@ -15,10 +14,9 @@
 		"duel": 1,
 		"cooperative": 0,
 		"name": "Oldschool Duel (Competitive settings)",
-		"defname": "competduel",
 
-		"dmflags": 0,
-		"dmflags2": 0,
+		"dmflags": 726084,
+		"dmflags2": 75264,
 		"dmflags3": 0
 	}, 
 	{
@@ -26,10 +24,9 @@
 		"duel": 1,
 		"cooperative": 0,
 		"name": "Newschool Duel",
-		"defname": "newschoolduel",
 
-		"dmflags": 0,
-		"dmflags2": 0,
+		"dmflags": 16798796,
+		"dmflags2": 168820737,
 		"dmflags3": 0
 	},
 	
@@ -39,10 +36,19 @@
 		"duel": 0,
 		"cooperative": 0,
 		"name": "Oldschool DM (DOOM DOS settings)",
-		"defname": "dosffa",
 
-		"dmflags": 0,
-		"dmflags2": 0,
+		"dmflags": 72029252,
+		"dmflags2": 823508480,
+		"dmflags3": 0
+	}, 
+	{
+		"gamemode": 0,
+		"duel": 0,
+		"cooperative": 0,
+		"name": "Oldschool DM (Altdeath settings)",
+
+		"dmflags": 72045632,
+		"dmflags2": 823508480,
 		"dmflags3": 0
 	}, 
 	{
@@ -50,54 +56,63 @@
 		"duel": 0,
 		"cooperative": 0,
 		"name": "Classic DM (Used in most of the Zdaemon servers)",
-		"defname": "zdffa",
 
-		"dmflags": 0,
-		"dmflags2": 0,
+		"dmflags": 1073829060,
+		"dmflags2": 163840,
 		"dmflags3": 0
-	}, {
+	}, 
+	{
 		"gamemode": 0,
 		"duel": 0,
+		"cooperative": 0,
 		"name": "Newschool FFA",
-		"defname": "nsffa",
 
-		"dmflags": 0,
-		"dmflags2": 0,
+		"dmflags": 21700,
+		"dmflags2": 131072,
 		"dmflags3": 0
 	},
+	{
+		"gamemode": 0,
+		"duel": 0,
+		"cooperative": 0,
+		"name": "Instagib FFA",
 
+		"dmflags": 285234372,
+		"dmflags2": 131072,
+		"dmflags3": 0
+	},
+	
+	
 	{
 		"gamemode": 1,
 		"duel": 0,
 		"cooperative": 0,
-		"name": "Competitive Settings",
-		"defname": "nscoop",
+		"name": "Competitive TDM Settings",
 
-		"dmflags": 0,
-		"dmflags2": 0,
+		"dmflags": 134304772,
+		"dmflags2": 806495232,
 		"dmflags3": 0
 	},
+	
 	
 	{
 		"gamemode": 2,
 		"duel": 0,
 		"cooperative": 1,
 		"name": "Oldschool Cooperative - DOOM DOS Settings",
-		"defname": "doscoop",
 
-		"dmflags": 0,
-		"dmflags2": 0,
+		"dmflags": 206241828,
+		"dmflags2": 823605760,
 		"dmflags3": 0
 	}, 
 	{
 		"gamemode": 2,
 		"duel": 0,
 		"cooperative": 1,
-		"name": "Semi-Oldschool Cooperative (no jump, no freelook, crosshair enabled)",
-		"defname": "semioscoop",
+		"name": "Semi-Oldschool Cooperative (no jump, crosshair enabled)",
 
-		"dmflags": 0,
-		"dmflags2": 0,
+		"dmflags": 1225080932,
+		"dmflags2": 1888625216,
 		"dmflags3": 0
 	}, 
 	{
@@ -105,11 +120,23 @@
 		"duel": 0,
 		"cooperative": 1,
 		"name": "Newschool Cooperative",
-		"defname": "nscoop",
 
-		"dmflags": 0,
-		"dmflags2": 0,
+		"dmflags": 278564,
+		"dmflags2": 1179712,
+		"dmflags3": 0
+	},
+	
+	
+	{
+		"gamemode": 3,
+		"duel": 0,
+		"cooperative": 0,
+		"name": "Competitive CTF Settings",
+
+		"dmflags": 283716,
+		"dmflags2": 131080,
 		"dmflags3": 0
 	}
+	
 	
 ]

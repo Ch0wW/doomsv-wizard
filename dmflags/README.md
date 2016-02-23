@@ -13,21 +13,17 @@ The structure is done that way:
 	"gamemode": 1,
 	"duel": 0,
 	"cooperative": 0,
-	
 	"name": "Oldschool DM (DOOM DOS settings)",
-	"defname": "dosffa",
 			
 	"dmflags": 0,
 	"dmflags2": 0, 
 	"dmflags3": 0
 }
 
-gamemode: the corresponding gamemode. (-1: disabled, 0: FFA/Duel, 1: TDM, 2: Coop, 3: CTF, 4: Survival, 5: )
+gamemode: the corresponding gamemode. (0: FFA/Duel, 1: TDM, 2: Coop, 3: CTF, 4: Survival, 5: DDOM, 6: KOTH)
 duel: if the gamemode is a duel. (set gamemode to 1 too)
 cooperative: if the gamemode is a cooperative one. (set gamemode to either 2 or 4)
-
-name: the name seen publicly seen when using the tool.
-defname: a short name, used only for commandline.
+name: the name publicly seen when using the tool.
 
 dmflags: the dmflags used.
 dmflags2: the dmflags2 used. 
