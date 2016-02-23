@@ -136,7 +136,29 @@
 		"dmflags": 283716,
 		"dmflags2": 131080,
 		"dmflags3": 0
+	},
+	
+	
+	{
+		"gamemode": 5,
+		"duel": 0,
+		"cooperative": 0,
+		"name": "Standard DDOM Settings",
+
+		"dmflags": 283652,
+		"dmflags2": 4325376,
+		"dmflags3": 0
+	},
+	
+	
+	{
+		"gamemode": 6,
+		"duel": 0,
+		"cooperative": 0,
+		"name": "Standard KOTH Settings",
+
+		"dmflags": 17056964,
+		"dmflags2": 131072,
+		"dmflags3": 0
 	}
-	
-	
 ]
